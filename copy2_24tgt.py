@@ -190,9 +190,9 @@ def turn_laser_on():
     print("Laser ON")
 # Main loop
 cartesian_coords = (4,1,1)  # Example coordinates
-radius, target_vertical_angle, target_horizontal_angle = cartesian_to_spherical(0.1, 10000, 0.1)
-target_horizontal_angle = (-(180*target_horizontal_angle)/3.14) + 70
-target_vertical_angle = (-(180*target_vertical_angle)/3.14)+8
+radius, target_vertical_angle, target_horizontal_angle = cartesian_to_spherical(1,2,-1)
+target_horizontal_angle = ((-(180*target_horizontal_angle)/3.14) + 70)
+target_vertical_angle = -90 - ((-(180*target_vertical_angle)/3.14)+8)
 
 print("Target Horizontal Angle:", target_horizontal_angle)  # Should print 0°
 print("Target Vertical Angle:", target_vertical_angle) 
