@@ -189,10 +189,10 @@ def turn_laser_on():
     GPIO.output(LASER_PIN, GPIO.HIGH)  # Turn on the laser
     print("Laser ON")
 # Main loop
-cartesian_coords = (4,1,1)  # Example coordinates
+cartesian_coords = (1,1,-1)  # Example coordinates
 radius, target_vertical_angle, target_horizontal_angle = cartesian_to_spherical(1,2,-1)
 target_horizontal_angle = ((-(180*target_horizontal_angle)/3.14) + 70)
-target_vertical_angle = -90 - ((-(180*target_vertical_angle)/3.14)+8)
+target_vertical_angle = -90 + (((180*target_vertical_angle)/3.14)+8)
 
 print("Target Horizontal Angle:", target_horizontal_angle)  # Should print 0°
 print("Target Vertical Angle:", target_vertical_angle) 
@@ -206,10 +206,10 @@ try:
     while True:
         # Convert spherical coordinates to angles
        # target_horizontal_angle, target_vertical_angle = cartesian_to_spherical2(target_point)
-#        target_horizontal_angle = -45  #the number subtracted is the offset distance
+#        target_horizontal_angle = -70 + (-45)  #the number subtracted is the offset distance
         print(target_vertical_angle)
         print( " is target vertical angle")
- #       target_vertical_angle = -45 #+ 189 # -171
+ #       target_vertical_angle = -90 + (45) #+ 189 # -171
         print("new target vertical angle")
         print(target_vertical_angle)
         #target_horizontal_angle = 90
