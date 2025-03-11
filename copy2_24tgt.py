@@ -121,7 +121,7 @@ def cartesianToPolar(x, y):
     radius = math.sqrt(x*x + y*y)
     theta = math.atan2(y, x)
     return radius, theta
-def cartesian_to_spherical(x, y, z):
+#def cartesian_to_spherical(x, y, z):
     """
     Converts Cartesian coordinates to spherical coordinates.
 
@@ -136,10 +136,11 @@ def cartesian_to_spherical(x, y, z):
         theta: Azimuthal angle in the xy-plane (radians, 0 to 2*pi).
         phi: Polar angle from the z-axis (radians, 0 to pi).
     """
-    rho = np.sqrt(x**2 + y**2 + z**2)
-    theta = np.arctan2(y, x)
-    phi = np.arccos(z / rho) if rho != 0 else 0  # Avoid division by zero
-    return (rho, theta, phi)
+ #   rho = np.sqrt(x**2 + y**2 + z**2)
+  #  theta = np.arctan2(y, x)
+   # phi = np.arccos(z / rho) if rho != 0 else 0  # Avoid division by zero
+   # return (rho, theta, phi)
+
 # Convert to spherical coordinates
 # Convert angles from radians to degrees
 theta = 0
@@ -189,14 +190,38 @@ def turn_laser_on():
     GPIO.output(LASER_PIN, GPIO.HIGH)  # Turn on the laser
     print("Laser ON")
 # Main loop
-cartesian_coords = (1,1,-1)  # Example coordinates
-radius, target_vertical_angle, target_horizontal_angle = cartesian_to_spherical(1,2,-1)
-target_horizontal_angle = ((-(180*target_horizontal_angle)/3.14) + 70)
-target_vertical_angle = -90 + (((180*target_vertical_angle)/3.14)+8)
+def cartesian_to_servo_angles(x, y, z, vertical_step_angle=45, horizontal_offset_per_step=15):
+    if y == 0:
+        horizontal_angle = -90 if x > 0 else 0
+    else:
+        horizontal_angle = -math.degrees(math.atan2(x, y))
 
+    # For vertical angle, use a direct linear mapping: 1 step = vertical_step_angle.
+    base_vertical = z * vertical_step_angle  # e.g., z = -1 → -45°
+
+    # Optionally clamp to the allowed servo ranges:
+    horizontal_angle = max(-90, min(0, horizontal_angle))
+    extra_offset = 0
+    if x > 1:
+        extra_offset = -horizontal_offset_per_step * (x - 1)
+    vertical_angle = base_vertical + extra_offset
+
+    vertical_angle = max(-90, min(0, vertical_angle))
+
+
+    return horizontal_angle, vertical_angle
+
+#cartesian_coords = (1,1,-1)  # Example coordinates
+target_horizontal_angle, target_vertical_angle = cartesian_to_servo_angles(0.1,1000,0.1)
 print("Target Horizontal Angle:", target_horizontal_angle)  # Should print 0°
 print("Target Vertical Angle:", target_vertical_angle) 
+target_vertical_angle = -90 + target_vertical_angle + 7
+target_horizontal_angle = target_horizontal_angle - 20
+#target_horizontal_angle = (-((180*target_horizontal_angle)/3.14) + 70)
+#target_vertical_angle = -90 + (((180*target_vertical_angle)/3.14)+8)
 
+#print("Target Horizontal Angle:", target_horizontal_angle)  # Should print 0°
+#print("Target Vertical Angle:", target_ve
 try:
     # Turn the laser on
     turn_laser_on()
