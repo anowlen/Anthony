@@ -5,7 +5,8 @@ esp32matt.ino works (run this on the anchor esp32), this code will get back the 
 use matt code (TagSetupForAnthony) i think (ryan did this idk) and run this on each respective tag (change the address)
 
 
-run esp32rpimatt.py on the raspberry pi
+run rpidifftopics.py on the rpi (returns most recent 5 values from each of the esp32), diff topics for each esp32
+-> future steps: use those data for the triangulation calculations
 
 
 
@@ -19,6 +20,8 @@ run esp32rpimatt.py on the raspberry pi
 
 
 DO NOT USE BELOW
+______
+run esp32rpimatt.py on the raspberry pi
 esp32rpimatt.py reads in the sent distance (run this on the rpi
 
 esp32matt.py run on an esp32 this is an esp32 sending distances 
