@@ -75,7 +75,7 @@ void loop() {
     if (mySerial.available()) {
       String response = mySerial.readString();
       Serial.println("UWB Response: " + response);
-      client.publish("esp32/distance", response.c_str());
+      client.publish("esp32/distance/ULCORNER", response.c_str());
     }
 
     mySerial.print("AT+ANCHOR_SEND=URCORNER,4,TEST\r\n");
@@ -84,7 +84,7 @@ void loop() {
     if (mySerial.available()) {
       String response = mySerial.readString();
       Serial.println("UWB Response: " + response);
-      client.publish("esp32/distance", response.c_str());
+      client.publish("esp32/distance/URCORNER", response.c_str());
     }
 
     mySerial.print("AT+ANCHOR_SEND=BLCORNER,4,TEST\r\n");
@@ -93,7 +93,7 @@ void loop() {
     if (mySerial.available()) {
       String response = mySerial.readString();
       Serial.println("UWB Response: " + response);
-      client.publish("esp32/distance", response.c_str());
+      client.publish("esp32/distance/BLCORNER", response.c_str());
     }
 
     /*mySerial.print("AT+ANCHOR_SEND=BRCORNER,4,TEST\r\n");
@@ -102,7 +102,7 @@ void loop() {
     if (mySerial.available()) {
       String response = mySerial.readString();
       Serial.println("UWB Response: " + response);
-      client.publish("esp32/distance", response.c_str());
+      client.publish("esp32/distance/BRCORNER", response.c_str());
     }
     */
   }
