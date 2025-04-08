@@ -96,7 +96,7 @@ void loop() {
       client.publish("esp32/distance/BLCORNER", response.c_str());
     }
 
-    /*mySerial.print("AT+ANCHOR_SEND=BRCORNER,4,TEST\r\n");
+    mySerial.print("AT+ANCHOR_SEND=BRCORNER,4,TEST\r\n");
     delay(1000);
     
     if (mySerial.available()) {
@@ -104,6 +104,6 @@ void loop() {
       Serial.println("UWB Response: " + response);
       client.publish("esp32/distance/BRCORNER", response.c_str());
     }
-    */
+    
   }
 }
