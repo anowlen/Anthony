@@ -5,7 +5,7 @@ import re  # Import regex module for extracting numbers
 distance_history = {
     "ULCORNER": [],
     "URCORNER": [],
-    "BLCORNER": []
+    "BLCORNER": [],
     "BRCORNER": []
 }
 
