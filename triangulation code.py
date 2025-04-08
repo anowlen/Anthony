@@ -90,6 +90,7 @@ print("Moving Average 5 with Outlier Removal:", ma5)
 ama5 = np.nanmean(ma5)
 print("Average of Moving Averages 3:", ama5)
 
+# stop here
 
 # Define the system of equations
 def my_system(vars):
