@@ -260,7 +260,7 @@ def cartesian_to_servo_angles(x, y, z, H0=1):
     return horizontal_angle, vertical_angle
 
 #cartesian_coords = (1,1,-1)  # Example coordinates
-target_horizontal_angle, target_vertical_angle = cartesian_to_servo_angles(2, 2, -1)
+target_horizontal_angle, target_vertical_angle = cartesian_to_servo_angles(-120, 23.5, -34)
 print("Target Horizontal Angle:", target_horizontal_angle)  # Should print 0°
 print("Target Vertical Angle:", target_vertical_angle) 
 target_vertical_angle = target_vertical_angle + 7

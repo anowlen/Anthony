@@ -74,10 +74,10 @@ def calculate_average(arr):
 ###TRIANGULATION CODE
 
 # Define reference points #this makes a rectangle, we have to change this later
-ref1 = np.array([200, 0, 0])   # bottom-left
-ref2 = np.array([0, 200, 0])   # top-left
-ref3 = np.array([200, 200, 0])   # top-right
-ref4 = np.array([0, 0, 0])   # bottom-right
+ref1 = np.array([-255.3, 0, -134.6])   # bottom-left
+ref2 = np.array([-755.7, 955, -38.1])   # top-left
+ref3 = np.array([176.5, 492.8, -50.8])   # top-right
+ref4 = np.array([176.5, 67.31, -50.8])   # bottom-right
 
 
 
