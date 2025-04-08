@@ -50,10 +50,10 @@ def on_message(client, userdata, msg):
             def my_system(vars):
                 x, y, z = vars
                 F = np.zeros(4)
-                F[0] = np.linalg.norm([x, y, z] - ref1) - d1
-                F[1] = np.linalg.norm([x, y, z] - ref2) - d2
-                F[2] = np.linalg.norm([x, y, z] - ref3) - d3
-                F[3] = np.linalg.norm([x, y, z] - ref4) - d4
+                F[0] = np.sqrt((x - ref1[0])**2 + (y - ref1[1])**2 + (z - ref1[2])**2) - d1
+                F[1] = np.sqrt((x - ref2[0])**2 + (y - ref2[1])**2 + (z - ref2[2])**2) - d2
+                F[2] = np.sqrt((x - ref3[0])**2 + (y - ref3[1])**2 + (z - ref3[2])**2) - d3
+                F[3] = np.sqrt((x - ref4[0])**2 + (y - ref4[1])**2 + (z - ref4[2])**2) - d4
                 return F
 
             initial_guess = [100, 100, 50]  # Better starting point than (0.5, 0.5, 0.5)
@@ -66,10 +66,21 @@ def on_message(client, userdata, msg):
         print(f"Invalid distance data received: {data}")
 
 def calculate_average(arr):
-  if not arr:
-    return 0  # Return 0 for empty array to avoid division by zero
-  total = sum(arr)
-  return total / len(arr)
+    if not arr:
+        return 0  # Avoid division by zero
+
+    arr_np = np.array(arr)
+    mean = np.mean(arr_np)
+    std = np.std(arr_np)
+
+    # Keep values within 1 standard deviation of the mean
+    filtered = arr_np[(arr_np >= mean - std) & (arr_np <= mean + std)]
+
+    if len(filtered) == 0:
+        return mean  # If all were outliers, return the original mean
+
+    return np.mean(filtered)
+
 
 ###TRIANGULATION CODE
 
