@@ -6,6 +6,7 @@ distance_history = {
     "ULCORNER": [],
     "URCORNER": [],
     "BLCORNER": []
+    "BRCORNER": []
 }
 
 # Function to update the history and maintain only the last 5 values
@@ -40,7 +41,7 @@ def on_message(client, userdata, msg):
 # MQTT Broker details
 mqtt_broker = "172.20.10.8"
 mqtt_port = 1883
-mqtt_topics = ["esp32/distance/ULCORNER", "esp32/distance/URCORNER", "esp32/distance/BLCORNER"]
+mqtt_topics = ["esp32/distance/ULCORNER", "esp32/distance/URCORNER", "esp32/distance/BLCORNER","esp32/distance/BRCORNER"]
 
 # Create an MQTT client
 client = mqtt.Client()
