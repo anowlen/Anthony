@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.optimize import least_squares
 
-# Define the rectangle points
+# Define reference points
 ref1 = np.array([2, 0, 0])   # bottom-left
 ref2 = np.array([0, 2, 0])   # top-left
 ref3 = np.array([2, 2, 0])   # top-right
