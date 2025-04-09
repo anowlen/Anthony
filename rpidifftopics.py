@@ -12,11 +12,13 @@ distance_history = {
     "BRCORNER": []
 }
 
+MAX_HISTORY_LENGTH = 10
+
 # Function to update the history and maintain only the last 5 values
 def update_history(esp32_id, new_distance):
     if esp32_id in distance_history:
         distance_history[esp32_id].append(new_distance)  # Add new value
-        if len(distance_history[esp32_id]) > 5:  # Keep only the last 5 values
+        if len(distance_history[esp32_id]) > MAX_HISTORY_LENGTH:  # Keep only the last 5 values
             distance_history[esp32_id].pop(0)
 
 # Function to extract the distance from the received message
@@ -66,19 +68,13 @@ def on_message(client, userdata, msg):
         print(f"Invalid distance data received: {data}")
 
 def calculate_average(arr):
-    if not arr:
-        return 0  # Avoid division by zero
-
     arr_np = np.array(arr)
-    mean = np.mean(arr_np)
+    median = np.median(arr_np)
+    # Keep values within ±1 standard deviation of the median
     std = np.std(arr_np)
-
-    # Keep values within 1 standard deviation of the mean
-    filtered = arr_np[(arr_np >= mean - std) & (arr_np <= mean + std)]
-
+    filtered = arr_np[(arr_np >= median - std) & (arr_np <= median + std)]
     if len(filtered) == 0:
-        return mean  # If all were outliers, return the original mean
-
+        return median
     return np.mean(filtered)
 
 
