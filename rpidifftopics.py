@@ -68,14 +68,27 @@ def on_message(client, userdata, msg):
         print(f"Invalid distance data received: {data}")
 
 def calculate_average(arr):
+    if not arr:
+        return 0
+
     arr_np = np.array(arr)
-    median = np.median(arr_np)
-    # Keep values within ±1 standard deviation of the median
+    mean = np.mean(arr_np)
     std = np.std(arr_np)
-    filtered = arr_np[(arr_np >= median - std) & (arr_np <= median + std)]
+
+    # Stricter filter: only values within 0.8 std dev
+    filtered = arr_np[(arr_np >= mean - 0.8 * std) & (arr_np <= mean + 0.8 * std)]
+
     if len(filtered) == 0:
-        return median
-    return np.mean(filtered)
+        filtered = arr_np  # fallback to all values
+
+    # Exponential smoothing: give more weight to newer values
+    alpha = 0.3  # smoothing factor (0.0 = very smooth, 1.0 = very reactive)
+    smoothed = filtered[0]
+    for val in filtered[1:]:
+        smoothed = alpha * val + (1 - alpha) * smoothed
+
+    return smoothed
+
 
 
 ###TRIANGULATION CODE
