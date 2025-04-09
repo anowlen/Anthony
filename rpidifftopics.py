@@ -9,7 +9,8 @@ distance_history = {
     "ULCORNER": [],
     "URCORNER": [],
     "BLCORNER": [],
-    "BRCORNER": []
+    "BRCORNER": [],
+    "RECENT" : []
 }
 
 MAX_HISTORY_LENGTH = 10
