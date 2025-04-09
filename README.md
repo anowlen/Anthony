@@ -1,4 +1,4 @@
-
+combined1.py is a couple meters off, just tried to combine abir + alanna code
 
 esp32matt.ino works (run this on the anchor esp32), this code will get back the distance values from the other tags YOU HAVE TO PUSH THE SMALL BUTTON ON THE BACK AND THE BOOT BUTTON when it says like UWB Module configured
 
