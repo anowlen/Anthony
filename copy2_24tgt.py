@@ -220,7 +220,7 @@ def turn_laser_on():
      
                     
 
-def cartesian_to_servo_angles(x, y, z, H0=0):
+def cartesian_to_servo_angles(x, y, z):
     """
     Compute servo angles from target coordinates.
     
@@ -247,12 +247,12 @@ def cartesian_to_servo_angles(x, y, z, H0=0):
     This means the beam for (1,2,-1) hits the ground twice as far forward as for (1,1,-1).
     """
     # Horizontal servo angle: based on x and y.
-    horizontal_angle = math.degrees(math.atan2(y,x))
+    horizontal_angle = -(math.degrees(math.atan2(y,x)) - 180)
     
     # Compute the elevation angle E (in degrees) from the horizontal needed
     # to hit the ground, given the mounting height H0 and forward distance y.
     p = math.sqrt(x**2 + y**2)
-    vertical_angle = math.degrees(math.atan(p/z))
+    vertical_angle = -90 - math.degrees(math.atan(z/p))
     
     # Convert elevation to servo vertical angle.
     # With our convention, when E = 45° (for y=1) we want V = -45°.
@@ -261,7 +261,7 @@ def cartesian_to_servo_angles(x, y, z, H0=0):
     return horizontal_angle, vertical_angle
 
 #cartesian_coords = (1,1,-1)  # Example coordinates
-target_horizontal_angle, target_vertical_angle = cartesian_to_servo_angles(-128, 34, -25)
+target_horizontal_angle, target_vertical_angle = cartesian_to_servo_angles(-312, 457, -150)
 print("Target Horizontal Angle:", target_horizontal_angle)  # Should print 0°
 print("Target Vertical Angle:", target_vertical_angle) 
 target_vertical_angle = target_vertical_angle + 7
@@ -361,7 +361,7 @@ finally:
     servo_x.stop()
     servo_y.stop()
     print("laser stay on")
-    time.sleep(3) #make laser stay on
+    time.sleep(10) #make laser stay on
     GPIO.output(LASER_PIN, GPIO.LOW)
     GPIO.cleanup()  # Clean up GPIO settings!
 
