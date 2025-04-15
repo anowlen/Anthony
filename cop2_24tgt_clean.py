@@ -34,7 +34,7 @@ def turn_laser_on():
     print("Laser ON")
 
 # --- Set Target Point ---
-target_x, target_y, target_z = 83, 340.4, -233.7
+target_x, target_y, target_z = -1, 1, -1
 target_horizontal_angle, target_vertical_angle = cartesian_to_servo_angles(target_x, target_y, target_z)
 
 # Apply offsets

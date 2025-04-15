@@ -47,10 +47,10 @@ distance_history = {
 }
 MAX_HISTORY_LENGTH = 10
 
-ref1 = np.array([-157.5, 0, -233.7])
-ref2 = np.array([-657.86, 955.0, -137.16])
-ref3 = np.array([274.3, 492.8, -149.9])
-ref4 = np.array([274.3, 67.31, -149.9])
+ref1 = np.array([-528.3, 0, -233.7]) #Bottom left
+ref2 = np.array([-528.3, 482.6, -233.7]) #top left
+ref3 = np.array([-203.2, 482.6, -233.7]) #top right
+ref4 = np.array([203.2, 0, -233.7]) #bottom right
 
 def update_history(esp32_id, new_distance):
     if esp32_id in distance_history:
@@ -84,6 +84,7 @@ def on_message(client, userdata, msg):
     distance = extract_distance(data)
 
     if distance is not None:
+        print(f"[{esp32_id}] Received distance: {distance} cm")
         update_history(esp32_id, distance)
         if all(len(values) >= 3 for values in distance_history.values()):
             d1 = calculate_average(distance_history["BLCORNER"])
