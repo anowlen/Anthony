@@ -30,7 +30,7 @@ def turn_laser_on():
     print("Laser ON")
 
 # Target
-target_x, target_y, target_z = -289.6,256.5,-233.7
+target_x, target_y, target_z = -368.3,208.28,-233.7
 target_horizontal_angle, target_vertical_angle = cartesian_to_servo_angles(target_x, target_y, target_z)
 target_horizontal_angle -= 20
 target_vertical_angle += 7
