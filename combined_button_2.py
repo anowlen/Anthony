@@ -14,7 +14,7 @@ GPIO.setmode(GPIO.BCM)
 SERVO_X_PIN = 18
 SERVO_Y_PIN = 27
 LASER_PIN = 25
-BUTTON_PIN = 17  # Updated button pin to match your code
+BUTTON_PIN = 22  # Updated button pin to match your code
 
 GPIO.setup(SERVO_X_PIN, GPIO.OUT)
 GPIO.setup(SERVO_Y_PIN, GPIO.OUT)
@@ -63,10 +63,10 @@ def calculate_average(arr):
     return smoothed
 
 # Reference points (corners)
-ref1 = np.array([-157.5, 0, -233.7]) #bottom left
-ref2 = np.array([-657.86, 955.0, -137.16]) #upper left
-ref3 = np.array([274.3, 492.8, -149.9]) #upper right
-ref4 = np.array([274.3, 67.31, -149.9]) #bottom right
+ref1 = np.array([-27.94,0,-232.41]) #bottom left
+ref2 = np.array([-83.82,461,-232.41]) #upper left
+ref3 = np.array([218.44,461,-232.41]) #upper right
+ref4 = np.array([299.72,0,-232.41]) #bottom right
 
 def on_message(client, userdata, msg):
     global latest_position
