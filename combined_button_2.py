@@ -47,10 +47,10 @@ mqtt_topics = [
 ]
 
 # Reference points
-ref1 = np.array([-157.5, 0, -233.7])
-ref2 = np.array([-657.86, 955.0, -137.16])
-ref3 = np.array([274.3, 492.8, -149.9])
-ref4 = np.array([274.3, 67.31, -149.9])
+ref1 = np.array([-27.94, 0, -232.41]) #BL
+ref2 = np.array([-83.82, 461, -232.41]) #UL
+ref3 = np.array([218.44, 461, -232.41]) #UR
+ref4 = np.array([299.72, 0, -232.41]) #BR
 
 # Functions
 def update_history(esp32_id, new_distance):
