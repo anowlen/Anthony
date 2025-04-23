@@ -63,10 +63,10 @@ def calculate_average(arr):
     return smoothed
 
 # Reference points (corners)
-ref1 = np.array([-157.5, 0, -233.7])
-ref2 = np.array([-657.86, 955.0, -137.16])
-ref3 = np.array([274.3, 492.8, -149.9])
-ref4 = np.array([274.3, 67.31, -149.9])
+ref1 = np.array([-157.5, 0, -233.7]) #bottom left
+ref2 = np.array([-657.86, 955.0, -137.16]) #upper left
+ref3 = np.array([274.3, 492.8, -149.9]) #upper right
+ref4 = np.array([274.3, 67.31, -149.9]) #bottom right
 
 def on_message(client, userdata, msg):
     global latest_position
