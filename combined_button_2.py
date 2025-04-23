@@ -95,19 +95,24 @@ def triangulate_position():
         print(f"  URCORNER: {d3:.2f} cm")
         print(f"  BRCORNER: {d4:.2f} cm")
 
+        # Fix z = -250
+        z_fixed = -250
+
         def my_system(vars):
-            x, y, z = vars
+            x, y = vars
             F = np.zeros(4)
-            F[0] = np.sqrt((x - ref1[0])**2 + (y - ref1[1])**2 + (z - ref1[2])**2) - d1
-            F[1] = np.sqrt((x - ref2[0])**2 + (y - ref2[1])**2 + (z - ref2[2])**2) - d2
-            F[2] = np.sqrt((x - ref3[0])**2 + (y - ref3[1])**2 + (z - ref3[2])**2) - d3
-            F[3] = np.sqrt((x - ref4[0])**2 + (y - ref4[1])**2 + (z - ref4[2])**2) - d4
+            F[0] = np.sqrt((x - ref1[0])**2 + (y - ref1[1])**2 + (z_fixed - ref1[2])**2) - d1
+            F[1] = np.sqrt((x - ref2[0])**2 + (y - ref2[1])**2 + (z_fixed - ref2[2])**2) - d2
+            F[2] = np.sqrt((x - ref3[0])**2 + (y - ref3[1])**2 + (z_fixed - ref3[2])**2) - d3
+            F[3] = np.sqrt((x - ref4[0])**2 + (y - ref4[1])**2 + (z_fixed - ref4[2])**2) - d4
             return F
 
-        initial_guess = [100, 100, 100]
+        initial_guess = [100, 100]
         result = least_squares(my_system, initial_guess)
-        latest_position = np.round(result.x, decimals=4)
-        print("Unknown point:", latest_position)
+        x, y = result.x
+        latest_position = np.round([x, y, z_fixed], decimals=4)
+        print("Unknown point (fixed z):", latest_position)
+
 
 
 def on_message(client, userdata, msg):
