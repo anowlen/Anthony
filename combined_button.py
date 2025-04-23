@@ -12,14 +12,14 @@ latest_position = None
 # Setup GPIO
 GPIO.setmode(GPIO.BCM)
 SERVO_X_PIN = 18
-SERVO_Y_PIN = 17
+SERVO_Y_PIN = 27
 LASER_PIN = 25
-BUTTON_PIN = 23
+BUTTON_PIN = 17  # Updated button pin to match your code
 
 GPIO.setup(SERVO_X_PIN, GPIO.OUT)
 GPIO.setup(SERVO_Y_PIN, GPIO.OUT)
 GPIO.setup(LASER_PIN, GPIO.OUT)
-GPIO.setup(BUTTON_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Active-low button
+GPIO.setup(BUTTON_PIN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)  # Active-HIGH on press
 
 servo_x = GPIO.PWM(SERVO_X_PIN, 50)
 servo_y = GPIO.PWM(SERVO_Y_PIN, 50)
@@ -63,12 +63,11 @@ def calculate_average(arr):
     return smoothed
 
 # Reference points (corners)
-ref1 = np.array([-157.5, 0, -233.7])       # bottom-left
-ref2 = np.array([-657.86, 955.0, -137.16]) # top-left
-ref3 = np.array([274.3, 492.8, -149.9])    # top-right
-ref4 = np.array([274.3, 67.31, -149.9])    # bottom-right
+ref1 = np.array([-157.5, 0, -233.7])
+ref2 = np.array([-657.86, 955.0, -137.16])
+ref3 = np.array([274.3, 492.8, -149.9])
+ref4 = np.array([274.3, 67.31, -149.9])
 
-# MQTT message callback
 def on_message(client, userdata, msg):
     global latest_position
 
@@ -104,7 +103,6 @@ def on_message(client, userdata, msg):
     else:
         print(f"Invalid distance data received: {data}")
 
-# Servo and laser helper functions
 def cartesian_to_servo_angles(x, y, z):
     horizontal_angle = -(math.degrees(math.atan2(x, y)) - 180) - 180
     p = math.sqrt(x**2 + y**2)
@@ -117,6 +115,10 @@ def angle_to_duty_cycle(angle):
 def turn_laser_on():
     GPIO.output(LASER_PIN, GPIO.HIGH)
     print("Laser ON")
+
+def turn_laser_off():
+    GPIO.output(LASER_PIN, GPIO.LOW)
+    print("Laser OFF")
 
 def point_laser_at_position(position):
     target_x, target_y, target_z = position
@@ -153,8 +155,8 @@ def point_laser_at_position(position):
         time.sleep(0.1)
         servo_y.ChangeDutyCycle(0)
 
-    print("Laser pointing complete.")
-    time.sleep(300)
+    time.sleep(5)
+    turn_laser_off()
 
 # MQTT setup
 mqtt_broker = "172.20.10.8"
@@ -173,25 +175,27 @@ for topic in mqtt_topics:
     client.subscribe(topic)
 
 print(f"Subscribed to {mqtt_topics}...")
+print("Waiting for button press...")
 
-# Main loop with button monitoring
 try:
     while True:
-        client.loop(timeout=0.1)  # Non-blocking
-        if GPIO.input(BUTTON_PIN) == GPIO.LOW:  # Button pressed
+        client.loop(timeout=0.1)
+
+        if GPIO.input(BUTTON_PIN) == GPIO.HIGH:
+            print("Button pressed!")
             if latest_position is not None:
-                print("Button pressed! Moving servos to latest triangulated position...")
                 point_laser_at_position(latest_position)
             else:
-                print("Button pressed but position not available yet.")
-        time.sleep(0.1)
+                print("Position not yet available.")
+            time.sleep(0.5)  # debounce
 
 except KeyboardInterrupt:
-    print("Stopping...")
+    print("Exiting...")
 
 finally:
     servo_x.stop()
     servo_y.stop()
-    GPIO.output(LASER_PIN, GPIO.LOW)
+    turn_laser_off()
     GPIO.cleanup()
-    print("GPIO cleaned up. Laser OFF.")
+    print("GPIO cleaned up.")
+
