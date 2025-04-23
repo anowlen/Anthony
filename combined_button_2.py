@@ -135,13 +135,13 @@ def point_laser_at_position(position):
     target_vertical_angle += 7
 
     current_horizontal_angle = 0
-    current_vertical_angle = 0  # Reset at start like in working code
+    current_vertical_angle = 0
     step_size = 1
 
     turn_laser_on()
     time.sleep(0.5)
 
-    # Horizontal movement
+    print(f"[DEBUG] Moving horizontal to: {target_horizontal_angle:.2f}")
     while round(current_horizontal_angle, 1) != round(target_horizontal_angle, 1):
         if current_horizontal_angle < target_horizontal_angle:
             current_horizontal_angle = min(current_horizontal_angle + step_size, target_horizontal_angle)
@@ -149,13 +149,15 @@ def point_laser_at_position(position):
             current_horizontal_angle = max(current_horizontal_angle - step_size, target_horizontal_angle)
 
         duty = angle_to_duty_cycle(current_horizontal_angle)
+        print(f"[DEBUG] Horizontal angle: {current_horizontal_angle:.1f} -> Duty: {duty}")
         servo_x.ChangeDutyCycle(duty)
         time.sleep(0.1)
         servo_x.ChangeDutyCycle(0)
+        time.sleep(0.1)
 
-    time.sleep(0.2)
+    time.sleep(0.3)
 
-    # Vertical movement
+    print(f"[DEBUG] Moving vertical to: {target_vertical_angle:.2f}")
     while round(current_vertical_angle, 1) != round(target_vertical_angle, 1):
         if current_vertical_angle < target_vertical_angle:
             current_vertical_angle = min(current_vertical_angle + step_size, target_vertical_angle)
@@ -163,14 +165,16 @@ def point_laser_at_position(position):
             current_vertical_angle = max(current_vertical_angle - step_size, target_vertical_angle)
 
         duty = angle_to_duty_cycle(current_vertical_angle)
+        print(f"[DEBUG] Vertical angle: {current_vertical_angle:.1f} -> Duty: {duty}")
         servo_y.ChangeDutyCycle(duty)
         time.sleep(0.1)
         servo_y.ChangeDutyCycle(0)
+        time.sleep(0.1)
 
-    time.sleep(0.2)
-
+    print("[DEBUG] Finished vertical movement.")
     time.sleep(10)
     turn_laser_off()
+
 
 # === MQTT setup ===
 client = mqtt.Client()
