@@ -110,7 +110,7 @@ def on_message(client, userdata, msg):
                 F[3] = np.sqrt((x - ref4[0])**2 + (y - ref4[1])**2 + (z - ref4[2])**2) - d4
                 return F
 
-            initial_guess = [0.5, 0.5, 0.5]
+            initial_guess = [100,100,-230]
             result = least_squares(my_system, initial_guess)
             latest_unknown_point = np.round(result.x, decimals=4)
             print("Updated Unknown Point:", latest_unknown_point)
