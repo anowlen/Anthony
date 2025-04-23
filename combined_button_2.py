@@ -11,8 +11,10 @@ latest_position = None
 current_horizontal_angle = 0
 current_vertical_angle = 0
 
-# === GPIO pin setup ===
+# === GPIO setup ===
 GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)  # Suppress "channel already in use" warnings
+
 SERVO_X_PIN = 18
 SERVO_Y_PIN = 27
 LASER_PIN = 25
@@ -42,6 +44,16 @@ ref1 = np.array([-27.94, 0, -232.41])     # BL
 ref2 = np.array([-83.82, 461, -232.41])   # UL
 ref3 = np.array([218.44, 461, -232.41])   # UR
 ref4 = np.array([299.72, 0, -232.41])     # BR
+
+# === MQTT Broker Info ===
+mqtt_broker = "172.20.10.8"
+mqtt_port = 1883
+mqtt_topics = [
+    "esp32/distance/ULCORNER",
+    "esp32/distance/URCORNER",
+    "esp32/distance/BLCORNER",
+    "esp32/distance/BRCORNER"
+]
 
 # === Helper functions ===
 def update_history(esp32_id, new_distance):
@@ -180,7 +192,7 @@ try:
                 point_laser_at_position(latest_position)
             else:
                 print("Not enough data to triangulate yet.")
-            time.sleep(0.5)
+            time.sleep(0.5)  # Debounce
 
 except KeyboardInterrupt:
     print("Shutting down...")
