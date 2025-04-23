@@ -187,6 +187,7 @@ try:
         client.loop(timeout=0.1)
 
         if GPIO.input(BUTTON_PIN) == GPIO.HIGH:
+            latest_position = [100, 300, -232]
             print("Button pressed!")
             if latest_position is not None:
                 point_laser_at_position(latest_position)
