@@ -157,12 +157,20 @@ def point_laser_at_position(position):
     servo_y.ChangeDutyCycle(0)
     time.sleep(0.2)
 
+<<<<<<< HEAD
 #<<<<<<< HEAD
     # Keep laser on briefly then turn off
     time.sleep(30)
 #=======
  #   time.sleep(3)
 #>>>>>>> 369d11de584ebd0f3491adccc46be081a311be4b
+=======
+
+    # Keep laser on briefly then turn off
+    time.sleep(30)
+
+
+>>>>>>> 4c6a210caaf83311dfa47fe9c8c332368f6a702c
     turn_laser_off()
 
 # === MQTT setup ===
