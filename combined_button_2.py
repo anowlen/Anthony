@@ -124,31 +124,49 @@ def turn_laser_off():
 
 def point_laser_at_position(position):
     target_x, target_y, target_z = position
-    h_angle, v_angle = cartesian_to_servo_angles(target_x, target_y, target_z)
-    h_angle -= 20
-    v_angle += 7
+    target_horizontal_angle, target_vertical_angle = cartesian_to_servo_angles(target_x, target_y, target_z)
+    target_horizontal_angle -= 20
+    target_vertical_angle += 7
 
-    cur_h = 0
-    cur_v = 0
-    step = 1
+    current_horizontal_angle = 0
+    current_vertical_angle = 0
+    step_size = 1
 
     turn_laser_on()
-    time.sleep(1)
+    time.sleep(0.5)
 
-    while round(cur_h, 1) != round(h_angle, 1):
-        cur_h = cur_h + step if cur_h < h_angle else cur_h - step
-        servo_x.ChangeDutyCycle(angle_to_duty_cycle(cur_h))
+    # Horizontal movement
+    while round(current_horizontal_angle, 1) != round(target_horizontal_angle, 1):
+        if current_horizontal_angle < target_horizontal_angle:
+            current_horizontal_angle = min(current_horizontal_angle + step_size, target_horizontal_angle)
+        else:
+            current_horizontal_angle = max(current_horizontal_angle - step_size, target_horizontal_angle)
+
+        duty = angle_to_duty_cycle(current_horizontal_angle)
+        servo_x.ChangeDutyCycle(duty)
         time.sleep(0.1)
-        servo_x.ChangeDutyCycle(0)
 
-    while round(cur_v, 1) != round(v_angle, 1):
-        cur_v = cur_v + step if cur_v < v_angle else cur_v - step
-        servo_y.ChangeDutyCycle(angle_to_duty_cycle(cur_v))
+    servo_x.ChangeDutyCycle(0)  # Stop signal
+    time.sleep(0.2)
+
+    # Vertical movement
+    while round(current_vertical_angle, 1) != round(target_vertical_angle, 1):
+        if current_vertical_angle < target_vertical_angle:
+            current_vertical_angle = min(current_vertical_angle + step_size, target_vertical_angle)
+        else:
+            current_vertical_angle = max(current_vertical_angle - step_size, target_vertical_angle)
+
+        duty = angle_to_duty_cycle(current_vertical_angle)
+        servo_y.ChangeDutyCycle(duty)
         time.sleep(0.1)
-        servo_y.ChangeDutyCycle(0)
 
-    time.sleep(5)
+    servo_y.ChangeDutyCycle(0)  # Stop signal
+    time.sleep(0.2)
+
+    # Keep laser on briefly then turn off
+    time.sleep(3)
     turn_laser_off()
+
 
 # MQTT setup
 client = mqtt.Client()
