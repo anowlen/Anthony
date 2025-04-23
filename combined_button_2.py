@@ -96,7 +96,7 @@ def triangulate_position():
             return F
 
         # Solve for the unknown point
-        initial_guess = [0.5, 0.5, 0.5]  # Starting guess for (x, y, z)
+        initial_guess = [100, 100, 100]  # Starting guess for (x, y, z)
         result = least_squares(my_system, initial_guess)
         
         latest_position = np.round(result.x, decimals=4)
