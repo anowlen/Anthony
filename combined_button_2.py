@@ -99,9 +99,9 @@ def triangulate_position():
         initial_guess = [0.5, 0.5, 0.5]  # Starting guess for (x, y, z)
         result = least_squares(my_system, initial_guess)
         
-        unknown_point = np.round(result.x, decimals=4)
+        latest_position = np.round(result.x, decimals=4)
         
-        print("Unknown point:", unknown_point)
+        print("Unknown point:", latest_position)
 
 def on_message(client, userdata, msg):
     esp32_id = msg.topic.split("/")[-1]
