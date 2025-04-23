@@ -164,7 +164,7 @@ def point_laser_at_position(position):
     time.sleep(0.2)
 
     # Keep laser on briefly then turn off
-    time.sleep(3)
+    time.sleep(10)
     turn_laser_off()
 
 
