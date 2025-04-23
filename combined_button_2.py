@@ -6,10 +6,12 @@ import RPi.GPIO as GPIO
 import time
 import math
 
-# Globals
+# === Globals ===
 latest_position = None
+current_horizontal_angle = 0
+current_vertical_angle = 0
 
-# GPIO pin setup
+# === GPIO pin setup ===
 GPIO.setmode(GPIO.BCM)
 SERVO_X_PIN = 18
 SERVO_Y_PIN = 27
@@ -26,33 +28,22 @@ servo_y = GPIO.PWM(SERVO_Y_PIN, 50)
 servo_x.start(0)
 servo_y.start(0)
 
-# Distance history
+# === Distance history ===
 distance_history = {
     "ULCORNER": [],
     "URCORNER": [],
     "BLCORNER": [],
     "BRCORNER": []
 }
-
 MAX_HISTORY_LENGTH = 10
 
-# MQTT broker details
-mqtt_broker = "172.20.10.8"
-mqtt_port = 1883
-mqtt_topics = [
-    "esp32/distance/ULCORNER",
-    "esp32/distance/URCORNER",
-    "esp32/distance/BLCORNER",
-    "esp32/distance/BRCORNER"
-]
+# === Reference points ===
+ref1 = np.array([-27.94, 0, -232.41])     # BL
+ref2 = np.array([-83.82, 461, -232.41])   # UL
+ref3 = np.array([218.44, 461, -232.41])   # UR
+ref4 = np.array([299.72, 0, -232.41])     # BR
 
-# Reference points
-ref1 = np.array([-27.94, 0, -232.41]) #BL
-ref2 = np.array([-83.82, 461, -232.41]) #UL
-ref3 = np.array([218.44, 461, -232.41]) #UR
-ref4 = np.array([299.72, 0, -232.41]) #BR
-
-# Functions
+# === Helper functions ===
 def update_history(esp32_id, new_distance):
     if esp32_id in distance_history:
         distance_history[esp32_id].append(new_distance)
@@ -95,12 +86,9 @@ def triangulate_position():
             F[3] = np.sqrt((x - ref4[0])**2 + (y - ref4[1])**2 + (z - ref4[2])**2) - d4
             return F
 
-        # Solve for the unknown point
-        initial_guess = [100, 100, 100]  # Starting guess for (x, y, z)
+        initial_guess = [100, 100, 100]
         result = least_squares(my_system, initial_guess)
-        
         latest_position = np.round(result.x, decimals=4)
-        
         print("Unknown point:", latest_position)
 
 def on_message(client, userdata, msg):
@@ -114,7 +102,9 @@ def on_message(client, userdata, msg):
 def cartesian_to_servo_angles(x, y, z):
     horizontal_angle = -(math.degrees(math.atan2(x, y)) - 180) - 180
     p = math.sqrt(x**2 + y**2)
-    vertical_angle = -90 - math.degrees(math.atan(z / p))
+    ratio = z / p if p != 0 else 0
+    ratio = max(min(ratio, 10), -10)
+    vertical_angle = -90 - math.degrees(math.atan(ratio))
     return horizontal_angle, vertical_angle
 
 def angle_to_duty_cycle(angle):
@@ -127,13 +117,13 @@ def turn_laser_off():
     GPIO.output(LASER_PIN, GPIO.LOW)
 
 def point_laser_at_position(position):
+    global current_horizontal_angle, current_vertical_angle
+
     target_x, target_y, target_z = position
     target_horizontal_angle, target_vertical_angle = cartesian_to_servo_angles(target_x, target_y, target_z)
     target_horizontal_angle -= 20
     target_vertical_angle += 7
 
-    current_horizontal_angle = 0
-    current_vertical_angle = 0
     step_size = 1
 
     turn_laser_on()
@@ -150,7 +140,7 @@ def point_laser_at_position(position):
         servo_x.ChangeDutyCycle(duty)
         time.sleep(0.1)
 
-    servo_x.ChangeDutyCycle(0)  # Stop signal
+    servo_x.ChangeDutyCycle(0)
     time.sleep(0.2)
 
     # Vertical movement
@@ -164,15 +154,13 @@ def point_laser_at_position(position):
         servo_y.ChangeDutyCycle(duty)
         time.sleep(0.1)
 
-    servo_y.ChangeDutyCycle(0)  # Stop signal
+    servo_y.ChangeDutyCycle(0)
     time.sleep(0.2)
 
-    # Keep laser on briefly then turn off
-    time.sleep(10)
+    time.sleep(3)
     turn_laser_off()
 
-
-# MQTT setup
+# === MQTT setup ===
 client = mqtt.Client()
 client.on_message = on_message
 client.connect(mqtt_broker, mqtt_port, 60)
@@ -187,13 +175,12 @@ try:
         client.loop(timeout=0.1)
 
         if GPIO.input(BUTTON_PIN) == GPIO.HIGH:
-            latest_position = [100, 300, -232]
             print("Button pressed!")
             if latest_position is not None:
                 point_laser_at_position(latest_position)
             else:
                 print("Not enough data to triangulate yet.")
-            time.sleep(0.5)  # Debounce delay
+            time.sleep(0.5)
 
 except KeyboardInterrupt:
     print("Shutting down...")
