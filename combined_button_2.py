@@ -89,6 +89,12 @@ def triangulate_position():
         d3 = calculate_average(distance_history["URCORNER"])
         d4 = calculate_average(distance_history["BRCORNER"])
 
+        print(f"\n[DEBUG] Triangulation @ {time.strftime('%H:%M:%S')}")
+        print(f"  BLCORNER: {d1:.2f} cm")
+        print(f"  ULCORNER: {d2:.2f} cm")
+        print(f"  URCORNER: {d3:.2f} cm")
+        print(f"  BRCORNER: {d4:.2f} cm")
+
         def my_system(vars):
             x, y, z = vars
             F = np.zeros(4)
@@ -102,6 +108,7 @@ def triangulate_position():
         result = least_squares(my_system, initial_guess)
         latest_position = np.round(result.x, decimals=4)
         print("Unknown point:", latest_position)
+
 
 def on_message(client, userdata, msg):
     esp32_id = msg.topic.split("/")[-1]
