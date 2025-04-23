@@ -51,10 +51,10 @@ distance_history = {
 }
 MAX_HISTORY_LENGTH = 10
 
-ref1 = np.array([-528.3, 0, -233.7])  # Bottom left
-ref2 = np.array([-528.3, 482.6, -233.7])  # Top left
-ref3 = np.array([-203.2, 482.6, -233.7])  # Top right
-ref4 = np.array([203.2, 0, -233.7])  # Bottom right
+ref1 = np.array([-27.94,0,-232.41]) #bottom left
+ref2 = np.array([-83.82,461,-232.41]) #upper left
+ref3 = np.array([218.44,461,-232.41]) #upper right
+ref4 = np.array([299.72,0,-232.41]) #bottom right
 
 def update_history(esp32_id, new_distance):
     if esp32_id in distance_history:
