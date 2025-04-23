@@ -129,13 +129,13 @@ def turn_laser_off():
     GPIO.output(LASER_PIN, GPIO.LOW)
 
 def point_laser_at_position(position):
-    global current_horizontal_angle, current_vertical_angle
-
     target_x, target_y, target_z = position
     target_horizontal_angle, target_vertical_angle = cartesian_to_servo_angles(target_x, target_y, target_z)
     target_horizontal_angle -= 20
     target_vertical_angle += 7
 
+    current_horizontal_angle = 0
+    current_vertical_angle = 0  # Reset at start like in working code
     step_size = 1
 
     turn_laser_on()
@@ -151,8 +151,8 @@ def point_laser_at_position(position):
         duty = angle_to_duty_cycle(current_horizontal_angle)
         servo_x.ChangeDutyCycle(duty)
         time.sleep(0.1)
+        servo_x.ChangeDutyCycle(0)
 
-    servo_x.ChangeDutyCycle(0)
     time.sleep(0.2)
 
     # Vertical movement
@@ -165,11 +165,11 @@ def point_laser_at_position(position):
         duty = angle_to_duty_cycle(current_vertical_angle)
         servo_y.ChangeDutyCycle(duty)
         time.sleep(0.1)
+        servo_y.ChangeDutyCycle(0)
 
-    servo_y.ChangeDutyCycle(0)
     time.sleep(0.2)
 
-    time.sleep(3)
+    time.sleep(10)
     turn_laser_off()
 
 # === MQTT setup ===
