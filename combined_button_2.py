@@ -88,16 +88,20 @@ def triangulate_position():
 
         def my_system(vars):
             x, y, z = vars
-            return np.array([
-                np.linalg.norm([x - ref1[0], y - ref1[1], z - ref1[2]]) - d1,
-                np.linalg.norm([x - ref2[0], y - ref2[1], z - ref2[2]]) - d2,
-                np.linalg.norm([x - ref3[0], y - ref3[1], z - ref3[2]]) - d3,
-                np.linalg.norm([x - ref4[0], y - ref4[1], z - ref4[2]]) - d4
-            ])
+            F = np.zeros(4)
+            F[0] = np.sqrt((x - ref1[0])**2 + (y - ref1[1])**2 + (z - ref1[2])**2) - d1
+            F[1] = np.sqrt((x - ref2[0])**2 + (y - ref2[1])**2 + (z - ref2[2])**2) - d2
+            F[2] = np.sqrt((x - ref3[0])**2 + (y - ref3[1])**2 + (z - ref3[2])**2) - d3
+            F[3] = np.sqrt((x - ref4[0])**2 + (y - ref4[1])**2 + (z - ref4[2])**2) - d4
+            return F
 
-        result = least_squares(my_system, [100, 100, 50])
-        latest_position = np.round(result.x, decimals=4)
-        print("Triangulated Position:", latest_position)
+        # Solve for the unknown point
+        initial_guess = [0.5, 0.5, 0.5]  # Starting guess for (x, y, z)
+        result = least_squares(my_system, initial_guess)
+        
+        unknown_point = np.round(result.x, decimals=4)
+        
+        print("Unknown point:", unknown_point)
 
 def on_message(client, userdata, msg):
     esp32_id = msg.topic.split("/")[-1]
