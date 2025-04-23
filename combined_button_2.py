@@ -16,7 +16,7 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)  # Suppress "channel already in use" warnings
 
 SERVO_X_PIN = 18
-SERVO_Y_PIN = 27
+SERVO_Y_PIN = 17
 LASER_PIN = 25
 BUTTON_PIN = 22
 
