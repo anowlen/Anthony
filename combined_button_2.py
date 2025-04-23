@@ -43,7 +43,7 @@ MAX_HISTORY_LENGTH = 10
 ref1 = np.array([-27.94, 0, -232.41])     # BL
 ref2 = np.array([-83.82, 461, -232.41])   # UL
 ref3 = np.array([218.44, 461, -232.41])   # UR
-ref4 = np.array([299.72, 0, -232.41])     # BR
+ref4 = np.array([299.72, 0, -134.62])     # BR
 
 # === MQTT Broker Info ===
 mqtt_broker = "172.20.10.8"
