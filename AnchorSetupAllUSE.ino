@@ -17,7 +17,7 @@ HardwareSerial mySerial(1);
 
 // ==== Timing and Anchors ====
 unsigned long previousMillis = 0;
-const long interval = 1000; // 1 second
+const long interval = 250; // 1 second
 
 String anchors[] = {"ULCORNER", "URCORNER", "BLCORNER", "BRCORNER"};
 String topics[]  = {"esp32/distance/ULCORNER", "esp32/distance/URCORNER", "esp32/distance/BLCORNER", "esp32/distance/BRCORNER"};
