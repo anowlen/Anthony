@@ -163,9 +163,8 @@ def point_laser_at_position(position):
         duty = angle_to_duty_cycle(current_horizontal_angle)
         print(f"[DEBUG] Horizontal angle: {current_horizontal_angle:.1f} -> Duty: {duty}")
         servo_x.ChangeDutyCycle(duty)
-        time.sleep(0.1)
+        time.sleep(0.05)
         servo_x.ChangeDutyCycle(0)
-        time.sleep(0.1)
 
     time.sleep(0.3)
 
@@ -179,9 +178,8 @@ def point_laser_at_position(position):
         duty = angle_to_duty_cycle(current_vertical_angle)
         print(f"[DEBUG] Vertical angle: {current_vertical_angle:.1f} -> Duty: {duty}")
         servo_y.ChangeDutyCycle(duty)
-        time.sleep(0.1)
+        time.sleep(0.05)
         servo_y.ChangeDutyCycle(0)
-        time.sleep(0.1)
 
     print("[DEBUG] Finished vertical movement.")
     time.sleep(10)
