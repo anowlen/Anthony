@@ -96,7 +96,7 @@ def triangulate_position():
         print(f"  BRCORNER: {d4:.2f} cm")
 
         # Fix z = -250
-        z_fixed = -270
+        z_fixed = -280
 
         def my_system(vars):
             x, y = vars
