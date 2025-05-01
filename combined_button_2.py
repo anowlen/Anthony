@@ -182,7 +182,7 @@ def point_laser_at_position(position):
         servo_y.ChangeDutyCycle(0)
 
     print("[DEBUG] Finished vertical movement.")
-    time.sleep(10)
+    time.sleep(15)
     turn_laser_off()
 
 
