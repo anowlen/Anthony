@@ -83,28 +83,24 @@ def calculate_average(arr):
 
 def triangulate_position():
     global latest_position
-    if all(len(distance_history[k]) >= 3 for k in ["ULCORNER", "URCORNER", "BLCORNER", "BRCORNER"]):
-        d1 = calculate_average(distance_history["BLCORNER"])
+    if all(len(distance_history[k]) >= 3 for k in ["ULCORNER", "URCORNER", "BRCORNER"]):
         d2 = calculate_average(distance_history["ULCORNER"])
         d3 = calculate_average(distance_history["URCORNER"])
         d4 = calculate_average(distance_history["BRCORNER"])
 
         print(f"\n[DEBUG] Triangulation @ {time.strftime('%H:%M:%S')}")
-        print(f"  BLCORNER: {d1:.2f} cm")
         print(f"  ULCORNER: {d2:.2f} cm")
         print(f"  URCORNER: {d3:.2f} cm")
         print(f"  BRCORNER: {d4:.2f} cm")
 
-        # Fix z = -250
         z_fixed = -280
 
         def my_system(vars):
             x, y = vars
-            F = np.zeros(4)
-            F[0] = np.sqrt((x - ref1[0])**2 + (y - ref1[1])**2 + (z_fixed - ref1[2])**2) - d1
-            F[1] = np.sqrt((x - ref2[0])**2 + (y - ref2[1])**2 + (z_fixed - ref2[2])**2) - d2
-            F[2] = np.sqrt((x - ref3[0])**2 + (y - ref3[1])**2 + (z_fixed - ref3[2])**2) - d3
-            F[3] = np.sqrt((x - ref4[0])**2 + (y - ref4[1])**2 + (z_fixed - ref4[2])**2) - d4
+            F = np.zeros(3)
+            F[0] = np.sqrt((x - ref2[0])**2 + (y - ref2[1])**2 + (z_fixed - ref2[2])**2) - d2
+            F[1] = np.sqrt((x - ref3[0])**2 + (y - ref3[1])**2 + (z_fixed - ref3[2])**2) - d3
+            F[2] = np.sqrt((x - ref4[0])**2 + (y - ref4[1])**2 + (z_fixed - ref4[2])**2) - d4
             return F
 
         initial_guess = [100, 100]
@@ -112,7 +108,6 @@ def triangulate_position():
         x, y = result.x
         latest_position = np.round([x, y, z_fixed], decimals=4)
         print("Unknown point (fixed z):", latest_position)
-
 
 
 def on_message(client, userdata, msg):
